@@ -154,3 +154,6 @@ cython_debug/
 
 # App logs
 logs/
+
+# Phone book
+book/

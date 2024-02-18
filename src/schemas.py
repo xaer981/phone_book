@@ -1,12 +1,13 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from utils import PhoneNumber
+from src.utils import PhoneNumber
 
 
 class Contact(BaseModel):
-    first_name: str
-    last_name: str = None
-    father_name: str = None
-    company: str = None
-    number: PhoneNumber
-    work_number: PhoneNumber = None
+    first_name: str = Field(title='Имя')
+    last_name: str = Field(title='Фамилия', default='')
+    father_name: str = Field(title='Отчество', default='')
+    company: str = Field(title='Название организации', default='')
+    number: PhoneNumber = Field(title='Номер телефона')
+    work_number: PhoneNumber | str = Field(title='Рабочий номер телефона',
+                                           default='')
