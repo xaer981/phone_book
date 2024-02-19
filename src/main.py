@@ -1,5 +1,7 @@
 import logging
 
+from prettytable import PrettyTable
+
 from src import constants
 from src.config import (configure_argument_parser, configure_logging,
                         configure_phone_book)
@@ -8,25 +10,50 @@ from src.crud import book_crud
 from src.validators import validate_required_args
 
 
-def get_all():
+def get_all() -> PrettyTable:
+    """
+    Получает список контактов.
+
+    Returns:
+        PrettyTable: таблица с контактами.
+    """
 
     return book_crud.get_all()
 
 
-def add():
+def add() -> None:
+    """Добавляет контакт в таблицу."""
     contact = add_conversation()
     book_crud.add(contact)
-    print('Контакт создан!')
 
 
-def delete(row: int):
+def delete(row: int) -> None:
+    """
+    Удаляет контакт из таблицы.
+
+    Args:
+        row (int): id контакта для удаления.
+    """
     book_crud.delete(row)
+
+
+def update(row: int) -> None:
+    """
+    Обновляет контакт в таблице.
+    Вызывает функцию запроса новых данных контакта и передаёт для обновления.
+
+    Args:
+        row (int): id контакта для обновления.
+    """
+    contact = add_conversation()
+    book_crud.update(row_id=row, instance=contact)
 
 
 MODE_TO_FUNCTION = {
     'get-all': get_all,
     'add': add,
     'delete': delete,
+    'update': update,
 }
 
 

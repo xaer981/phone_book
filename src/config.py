@@ -6,6 +6,17 @@ from src import constants
 
 
 def configure_argument_parser(available_modes) -> argparse.ArgumentParser:
+    """
+    Запускает конфигурацию парсера.
+    Добавляет два аргумента: доступные режимы,
+    номер записи для удаления/изменения.
+
+    Args:
+        available_modes (_type_): доступные режимы работы.
+
+    Returns:
+        argparse.ArgumentParser: парсер аргументов.
+    """
     parser = argparse.ArgumentParser(description=constants.APP_DESCRIPTION)
     parser.add_argument(constants.MODE_ARG_NAME,
                         choices=available_modes,

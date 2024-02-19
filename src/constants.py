@@ -6,11 +6,16 @@ LOG_DIR_NAME = 'logs'
 LOG_FILE_NAME = 'phone_book.log'
 PHONE_BOOK_DIR_NAME = 'book'
 PHONE_BOOK_FILE_NAME = 'phone_book'
+TEMP_FILE_NAME = 'temp.csv'
 
-# Parser
+# App
 APP_DESCRIPTION = 'Телефонная книга для консоли'
+CONTACT_CREATED_MESSAGE = 'Контакт создан!'
+CONTACT_DELETED_MESSAGE = 'Запись удалена!'
+CONTACT_NOT_FOUND_MESSAGE = 'Контакта с таким номером не нашлось'
 MODE_ARG_NAME = 'mode'
 MODES_HELP_MESSAGE = 'Режим работы телефонной книги'
+PHONE_BOOK_EMPTY_MESSAGE = 'Телефонная книга пуста'
 ROW_HELP_MESSAGE = 'Параметр для выбора записи при удалении/редактировании'
 ROW_ARG_SHORT_NAME = '-i'
 ROW_ARG_FULL_NAME = '--id'
@@ -35,6 +40,10 @@ ADD_CONV_NAME_HELP = {
                     False),
 }
 ABORT_EXIT_MESSAGE = '\nПроцесс создания контакта остановлен'
+
+# Utils
+DEFAULT_ENCODING = 'utf-8'
+DEFAULT_DIALECT = 'unix'
 
 # Logs
 LOG_DT_FORMAT = '%d.%m.%Y %H:%M:%S'
