@@ -7,7 +7,8 @@ from src.config import (configure_argument_parser, configure_logging,
                         configure_phone_book)
 from src.conversation_handler import add_conversation
 from src.crud import book_crud
-from src.validators import validate_required_args
+from src.utils import paginator
+from src.validators import validate_page, validate_required_args
 
 
 def get_all() -> PrettyTable:
@@ -50,14 +51,19 @@ def update(row: int) -> None:
 
 
 MODE_TO_FUNCTION = {
-    'get-all': get_all,
-    'add': add,
-    'delete': delete,
-    'update': update,
+    constants.GET_MODE_NAME: get_all,
+    constants.ADD_MODE_NAME: add,
+    constants.DELETE_MODE_NAME: delete,
+    constants.UPDATE_MODE_NAME: update,
 }
 
 
 def main() -> None:
+    """
+    Основная логика запуска приложения.
+    Запускат конфигурацию логгера, телефонной книги и парсера.
+    Если есть результаты работы - выводит их.
+    """
     configure_logging()
     configure_phone_book()
     logging.info('Телефонная книга запущена!')
@@ -65,11 +71,15 @@ def main() -> None:
     arg_parser = configure_argument_parser(MODE_TO_FUNCTION.keys())
     args = arg_parser.parse_args()
     validate_required_args(arg_parser, args)
+    validate_page(arg_parser, args)
     logging.info(f'Аргументы: {args}')
 
     parser_mode = args.mode
     if parser_mode in constants.EDIT_METHODS:
         results = MODE_TO_FUNCTION[parser_mode](args.id)
+    elif parser_mode == constants.GET_MODE_NAME:
+        results = MODE_TO_FUNCTION[parser_mode]()
+        results = paginator(results, args.page)
     else:
         results = MODE_TO_FUNCTION[parser_mode]()
 

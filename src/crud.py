@@ -35,6 +35,7 @@ class BookCrud:
                       encoding=constants.DEFAULT_ENCODING) as file:
                 table = from_csv(file, field_names=contact_titles)
                 table.add_autoindex('ID')
+                table.sortby = 'ID'
 
         except csv.Error:
             print(Fore.RED + constants.PHONE_BOOK_EMPTY_MESSAGE)
@@ -106,6 +107,7 @@ class BookCrud:
             row_id (int): id контакта для обновления.
             instance (BaseModel): контакт, заменяющий старый.
         """
+        logging.info(f'Обновляю контакт с ID {row_id}')
         with open(self.phone_book,
                   mode='r',
                   encoding=constants.DEFAULT_ENCODING) as inp:
@@ -131,6 +133,8 @@ class BookCrud:
                         writer.writerow(instance.model_dump())
 
         os.replace(constants.TEMP_FILE_NAME, self.phone_book)
+        print(Fore.GREEN + constants.CONTACT_UPDATED_MESSAGE)
+        logging.info(constants.CONTACT_UPDATED_MESSAGE)
 
 
 book_crud = BookCrud(book_path=(constants.BASE_DIR /

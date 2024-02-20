@@ -1,18 +1,22 @@
 import argparse
 import logging
 from logging.handlers import RotatingFileHandler
+from typing import KeysView
 
 from src import constants
 
 
-def configure_argument_parser(available_modes) -> argparse.ArgumentParser:
+def configure_argument_parser(
+    available_modes: KeysView
+) -> argparse.ArgumentParser:
     """
     Запускает конфигурацию парсера.
-    Добавляет два аргумента: доступные режимы,
-    номер записи для удаления/изменения.
+    Добавляет три аргумента: доступные режимы,
+    номер записи для удаления/изменения,
+    номер страницы для просмотра.
 
     Args:
-        available_modes (_type_): доступные режимы работы.
+        available_modes (KeysView): доступные режимы работы.
 
     Returns:
         argparse.ArgumentParser: парсер аргументов.
@@ -25,11 +29,17 @@ def configure_argument_parser(available_modes) -> argparse.ArgumentParser:
                         constants.ROW_ARG_FULL_NAME,
                         type=int,
                         help=constants.ROW_HELP_MESSAGE)
+    parser.add_argument(constants.PAGE_ARG_SHORT_NAME,
+                        constants.PAGE_ARG_FULL_NAME,
+                        type=int,
+                        default=1,
+                        help=constants.PAGE_HELP_MESSAGE)
 
     return parser
 
 
 def configure_phone_book() -> None:
+    """Создаёт необходимые папки и файл телефонной книги."""
     phone_book_dir = constants.BASE_DIR / constants.PHONE_BOOK_DIR_NAME
     phone_book_dir.mkdir(parents=True, exist_ok=True)
     phone_book_file = ((phone_book_dir / constants.PHONE_BOOK_FILE_NAME)
@@ -38,6 +48,7 @@ def configure_phone_book() -> None:
 
 
 def configure_logging() -> None:
+    """Запускает конфигурацию логгера, создаёт папки для логов."""
     log_dir = constants.BASE_DIR / constants.LOG_DIR_NAME
     log_dir.mkdir(parents=True, exist_ok=True)
     log_file = log_dir / constants.LOG_FILE_NAME

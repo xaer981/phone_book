@@ -4,6 +4,7 @@ from src.utils import PhoneNumber
 
 
 class Contact(BaseModel):
+    """Модель контактов."""
     first_name: str = Field(title='Имя')
     last_name: str = Field(title='Фамилия', default='')
     father_name: str = Field(title='Отчество', default='')
