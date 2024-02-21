@@ -8,7 +8,7 @@ from src import constants
 
 def validate_required_args(arg_parser: ArgumentParser, args: Namespace):
     """
-    Проверяет передан ли необходимый аргумент для работы режимой изменения.
+    Проверяет передан ли необходимый аргумент для работы режимов изменения.
 
     Args:
         arg_parser (ArgumentParser): объект парсера.

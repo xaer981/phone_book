@@ -34,6 +34,40 @@ def configure_argument_parser(
                         type=int,
                         default=1,
                         help=constants.PAGE_HELP_MESSAGE)
+    subparser = parser.add_argument_group('search',
+                                          ('Параметры для поиска контакта. '
+                                           'Можно указать любое количество '
+                                           'критериев для поиска.'))
+    subparser.add_argument('-f',
+                           '--first_name',
+                           metavar='Андрей',
+                           default='',
+                           help='Имя контакта')
+    subparser.add_argument('-l',
+                           '--last_name',
+                           metavar='Петров',
+                           default='',
+                           help='Фамилия контакта')
+    subparser.add_argument('-fr',
+                           '--father_name',
+                           metavar='Игоревич',
+                           default='',
+                           help='Отчество контакта')
+    subparser.add_argument('-c',
+                           '--company',
+                           metavar='Effective Mobile',
+                           default='',
+                           help='Компания контакта')
+    subparser.add_argument('-n',
+                           '--number',
+                           metavar='+7 999 123 45 67',
+                           default='',
+                           help='Номер контакта')
+    subparser.add_argument('-wn',
+                           '--work_number',
+                           metavar='+7 999 765 43 21',
+                           default='',
+                           help='Рабочий номер контакта')
 
     return parser
 

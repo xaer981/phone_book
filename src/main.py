@@ -1,4 +1,5 @@
 import logging
+from argparse import Namespace
 
 from prettytable import PrettyTable
 
@@ -7,7 +8,7 @@ from src.config import (configure_argument_parser, configure_logging,
                         configure_phone_book)
 from src.conversation_handler import add_conversation
 from src.crud import book_crud
-from src.utils import paginator
+from src.utils import find_rows, paginator
 from src.validators import validate_page, validate_required_args
 
 
@@ -50,11 +51,32 @@ def update(row: int) -> None:
     book_crud.update(row_id=row, instance=contact)
 
 
+def search(args: Namespace) -> PrettyTable:
+    """
+    Основная логика поиска.
+    Получает всю таблицу контактов, находит подходящие.
+    Затем формирует и выводит таблицу.
+
+    Args:
+        args (Namespace): аргументы для поиска.
+
+    Returns:
+        PrettyTable: таблица с найденными контактами.
+    """
+    book = get_all()
+    found, field_names = find_rows(book, args)
+    result = PrettyTable(field_names)
+    result.add_rows(found)
+
+    return result
+
+
 MODE_TO_FUNCTION = {
     constants.GET_MODE_NAME: get_all,
     constants.ADD_MODE_NAME: add,
     constants.DELETE_MODE_NAME: delete,
     constants.UPDATE_MODE_NAME: update,
+    constants.SEARCH_MODE_NAME: search,
 }
 
 
@@ -80,6 +102,8 @@ def main() -> None:
     elif parser_mode == constants.GET_MODE_NAME:
         results = MODE_TO_FUNCTION[parser_mode]()
         results = paginator(results, args.page)
+    elif parser_mode == 'search':
+        results = MODE_TO_FUNCTION[parser_mode](args)
     else:
         results = MODE_TO_FUNCTION[parser_mode]()
 

@@ -27,6 +27,7 @@ ROW_HELP_MESSAGE = 'Параметр для выбора записи при у�
 ROW_ARG_SHORT_NAME = '-i'
 ROW_ARG_FULL_NAME = '--id'
 ROW_ARG_MAX_USES = 1
+SEARCH_MODE_NAME = 'search'
 UPDATE_MODE_NAME = 'update'
 EDIT_METHODS = (UPDATE_MODE_NAME, DELETE_MODE_NAME)
 
