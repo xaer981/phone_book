@@ -9,7 +9,8 @@ from src.config import (configure_argument_parser, configure_logging,
 from src.conversation_handler import add_conversation
 from src.crud import book_crud
 from src.utils import find_rows, paginator
-from src.validators import validate_page, validate_required_args
+from src.validators import (validate_at_least_one_search_param, validate_page,
+                            validate_required_args)
 
 
 def get_all() -> PrettyTable:
@@ -91,19 +92,21 @@ def main() -> None:
     logging.info('Телефонная книга запущена!')
 
     arg_parser = configure_argument_parser(MODE_TO_FUNCTION.keys())
-    args = arg_parser.parse_args()
-    validate_required_args(arg_parser, args)
-    validate_page(arg_parser, args)
-    logging.info(f'Аргументы: {args}')
+    parser_args = arg_parser.parse_args()
+    validate_required_args(arg_parser, parser_args)
+    validate_page(arg_parser, parser_args)
+    logging.info(f'Аргументы: {parser_args}')
 
-    parser_mode = args.mode
+    parser_mode = parser_args.mode
     if parser_mode in constants.EDIT_METHODS:
-        results = MODE_TO_FUNCTION[parser_mode](args.id)
+        results = MODE_TO_FUNCTION[parser_mode](parser_args.id)
     elif parser_mode == constants.GET_MODE_NAME:
         results = MODE_TO_FUNCTION[parser_mode]()
-        results = paginator(results, args.page)
-    elif parser_mode == 'search':
-        results = MODE_TO_FUNCTION[parser_mode](args)
+        results = paginator(results, parser_args.page)
+    elif parser_mode == constants.SEARCH_MODE_NAME:
+        validate_at_least_one_search_param(arg_parser, parser_args)
+        results = MODE_TO_FUNCTION[parser_mode](parser_args)
+        results = paginator(results, parser_args.page)
     else:
         results = MODE_TO_FUNCTION[parser_mode]()
 

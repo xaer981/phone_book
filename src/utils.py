@@ -1,5 +1,7 @@
 import json
+import logging
 from argparse import Namespace
+from copy import copy
 from typing import KeysView
 
 from prettytable import PrettyTable
@@ -33,7 +35,14 @@ def paginator(table: PrettyTable, page: int = 1) -> str:
                            line_break='\0').split('\0')
     pages_length = len(pages)
     for num, pg in enumerate(pages):
-        pages[num] = f'\nСтраница {num + 1} из {pages_length}\n' + pg
+        pages[num] = (
+            constants.PAGINATOR_PAGE_MESSAGE.format(
+                num=num + 1,
+                pages_length=pages_length
+            )
+            + constants.PAGINATOR_PAGE_SELECT_HELP_MESSAGE
+            + pg
+        )
 
     return (pages[page - 1]
             if page <= (len(pages))
@@ -56,18 +65,21 @@ def find_rows(book: PrettyTable,
         а также название полей таблицы.
     """
     found = []
-    args = vars(args)
+    args = vars(copy(args))
     args.pop('mode')
     args.pop('id')
     args.pop('page')
     field_names = book.field_names
     args = dict(zip(field_names[1:], args.values()))
-    args = {k: v for k, v in args.items() if v}
+    args = {k: v for k, v in args.items() if v is not None}
+    logging.info(f'Начинаю поиск контактов с {args}')
     book.header = False
     book = book.get_formatted_string('json', ensure_ascii=False)
     book = json.loads(book)
     for row in book:
-        if all(row.get(key) == val for key, val in args.items()):
+        if all(row.get(key).lower() == val.lower()
+               for key, val in args.items()):
             found.append(list(row.values()))
+    logging.info(f'Найдено следующее: {found}')
 
     return found, book[0].keys()

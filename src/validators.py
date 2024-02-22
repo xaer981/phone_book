@@ -6,7 +6,7 @@ from pydantic import Field, TypeAdapter, ValidationError
 from src import constants
 
 
-def validate_required_args(arg_parser: ArgumentParser, args: Namespace):
+def validate_required_args(arg_parser: ArgumentParser, parser_args: Namespace):
     """
     Проверяет передан ли необходимый аргумент для работы режимов изменения.
 
@@ -14,12 +14,11 @@ def validate_required_args(arg_parser: ArgumentParser, args: Namespace):
         arg_parser (ArgumentParser): объект парсера.
         args (Namespace): переданные в парсер аргументы.
     """
-    if args.mode in constants.EDIT_METHODS and args.id is None:
-        arg_parser.error('Необходимо передать номер записи '
-                         'для редактирования (-i, --id)')
+    if parser_args.mode in constants.EDIT_METHODS and parser_args.id is None:
+        arg_parser.error(constants.EDIT_METHODS_NO_REQUIRED_ARGS_MESSAGE)
 
 
-def validate_page(arg_parser: ArgumentParser, args: Namespace):
+def validate_page(arg_parser: ArgumentParser, parser_args: Namespace):
     """
     Проверяет, что страница больше нуля.
 
@@ -29,8 +28,22 @@ def validate_page(arg_parser: ArgumentParser, args: Namespace):
     """
     PositiveInt = Annotated[int, Field(gt=0)]
     ta = TypeAdapter(PositiveInt)
-    if args.page is not None and args.mode == constants.GET_MODE_NAME:
+    if (parser_args.page is not None
+            and parser_args.mode == constants.GET_MODE_NAME):
         try:
-            ta.validate_python(args.page)
+            ta.validate_python(parser_args.page)
         except ValidationError:
             arg_parser.error('Страница должна быть больше 0!')
+
+
+def validate_at_least_one_search_param(arg_parser, parser_args):
+    """
+    Проверяет, что передан хотя бы один аргумент для поиска.
+
+    Args:
+        arg_parser (_type_): объект парсера.
+        parser_args (_type_): переданные в парсер аргументы.
+    """
+    parser_args = vars(parser_args)
+    if not any(parser_args.get(key) for key in constants.ADD_CONV_NAME_HELP):
+        arg_parser.error(constants.SEARCH_NO_PARAMS_MESSAGE)

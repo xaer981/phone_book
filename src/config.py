@@ -11,9 +11,10 @@ def configure_argument_parser(
 ) -> argparse.ArgumentParser:
     """
     Запускает конфигурацию парсера.
-    Добавляет три аргумента: доступные режимы,
+    Добавляет аргумента: доступные режимы,
     номер записи для удаления/изменения,
-    номер страницы для просмотра.
+    номер страницы для просмотра,
+    поля для поиска контакта.
 
     Args:
         available_modes (KeysView): доступные режимы работы.
@@ -34,40 +35,38 @@ def configure_argument_parser(
                         type=int,
                         default=1,
                         help=constants.PAGE_HELP_MESSAGE)
-    subparser = parser.add_argument_group('search',
-                                          ('Параметры для поиска контакта. '
-                                           'Можно указать любое количество '
-                                           'критериев для поиска.'))
-    subparser.add_argument('-f',
-                           '--first_name',
-                           metavar='Андрей',
-                           default='',
-                           help='Имя контакта')
-    subparser.add_argument('-l',
-                           '--last_name',
-                           metavar='Петров',
-                           default='',
-                           help='Фамилия контакта')
-    subparser.add_argument('-fr',
-                           '--father_name',
-                           metavar='Игоревич',
-                           default='',
-                           help='Отчество контакта')
-    subparser.add_argument('-c',
-                           '--company',
-                           metavar='Effective Mobile',
-                           default='',
-                           help='Компания контакта')
-    subparser.add_argument('-n',
-                           '--number',
-                           metavar='+7 999 123 45 67',
-                           default='',
-                           help='Номер контакта')
-    subparser.add_argument('-wn',
-                           '--work_number',
-                           metavar='+7 999 765 43 21',
-                           default='',
-                           help='Рабочий номер контакта')
+    subparser = parser.add_argument_group(constants.SEARCH_MODE_NAME,
+                                          constants.SEARCH_MODE_HELP_MESSAGE)
+    subparser.add_argument(constants.FIRST_NAME_ARG_SHORT_NAME,
+                           constants.FIRST_NAME_ARG_FULL_NAME,
+                           metavar=constants.FIRST_NAME_ARG_METAVAR,
+                           default=None,
+                           help=constants.FIRST_NAME_HELP_MESSAGE)
+    subparser.add_argument(constants.LAST_NAME_ARG_SHORT_NAME,
+                           constants.LAST_NAME_ARG_FULL_NAME,
+                           metavar=constants.LAST_NAME_ARG_METAVAR,
+                           default=None,
+                           help=constants.LAST_NAME_HELP_MESSAGE)
+    subparser.add_argument(constants.FATHER_NAME_ARG_SHORT_NAME,
+                           constants.FATHER_NAME_ARG_FULL_NAME,
+                           metavar=constants.FATHER_NAME_ARG_METAVAR,
+                           default=None,
+                           help=constants.FATHER_NAME_HELP_MESSAGE)
+    subparser.add_argument(constants.COMPANY_ARG_SHORT_NAME,
+                           constants.COMPANY_ARG_FULL_NAME,
+                           metavar=constants.COMPANY_ARG_METAVAR,
+                           default=None,
+                           help=constants.COMPANY_HELP_MESSAGE)
+    subparser.add_argument(constants.NUMBER_ARG_SHORT_NAME,
+                           constants.NUMBER_ARG_FULL_NAME,
+                           metavar=constants.NUMBER_ARG_METAVAR,
+                           default=None,
+                           help=constants.NUMBER_HELP_MESSAGE)
+    subparser.add_argument(constants.WORK_NUMBER_ARG_SHORT_NAME,
+                           constants.WORK_NUMBER_ARG_FULL_NAME,
+                           metavar=constants.WORK_NUMBER_ARG_METAVAR,
+                           default=None,
+                           help=constants.WORK_NUMBER_HELP_MESSAGE)
 
     return parser
 
